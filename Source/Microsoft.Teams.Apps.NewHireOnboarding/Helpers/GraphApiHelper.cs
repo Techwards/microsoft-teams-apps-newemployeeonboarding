@@ -354,6 +354,51 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Helpers
         }
 
         /// <summary>
+        /// Get installed app id.
+        /// </summary>
+        /// <param name="token">Microsoft Graph application access token.</param>
+        /// <param name="userAadId">Azure Active Directory Id for a user.</param>
+        /// <returns>Installed app id.</returns>
+        public async Task<string> GetInstalledAppIdAsync(string token, string userAadId)
+        {
+            var graphClient = this.GetGraphServiceClient(token);
+            var installedApps = await graphClient.Users[userAadId].Teamwork.InstalledApps
+                .Request()
+                .Expand("teamsAppDefinition")
+                .GetAsync();
+
+            foreach (var installedApp in installedApps)
+            {
+                if (installedApp.TeamsAppDefinition.DisplayName == "New Employee Onboarding")
+                {
+                    this.logger.LogInformation($"Installed App Id : {installedApp.Id}");
+                    return installedApp.Id;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Remove the app from the user scope.
+        /// </summary>
+        /// <param name="token">Microsoft Graph Application access token.</param>
+        /// <param name="userAadIdList">Azure Active Directory Id List for users.</param>
+        /// <param name="installedAppId">Installed app Id which is installed for a user.</param>
+        /// <returns>None.</returns>
+        public async Task RemoveAppFromUserScopeAsync(string token, List<string> userAadIdList, string installedAppId)
+        {
+            var graphClient = this.GetGraphServiceClient(token);
+            foreach (var userAadId in userAadIdList)
+            {
+                this.logger.LogInformation($"Removing app for a user Id : {userAadId}");
+                await graphClient.Users[userAadId].Teamwork.InstalledApps[installedAppId]
+                .Request()
+                .DeleteAsync();
+            }
+        }
+
+        /// <summary>
         /// Installs App for a user.
         /// </summary>
         /// <param name="token">Microsoft Graph application access token.</param>
