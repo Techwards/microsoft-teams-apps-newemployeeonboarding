@@ -362,18 +362,25 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Helpers
         public async Task<string> GetInstalledAppIdAsync(string token, string userAadId)
         {
             var graphClient = this.GetGraphServiceClient(token);
-            var installedApps = await graphClient.Users[userAadId].Teamwork.InstalledApps
+            try
+            {
+                var installedApps = await graphClient.Users[userAadId].Teamwork.InstalledApps
                 .Request()
                 .Expand("teamsAppDefinition")
                 .GetAsync();
 
-            foreach (var installedApp in installedApps)
-            {
-                if (installedApp.TeamsAppDefinition.DisplayName == "New Employee Onboarding")
+                foreach (var installedApp in installedApps)
                 {
-                    this.logger.LogInformation($"Installed App Id : {installedApp.Id}");
-                    return installedApp.Id;
+                    if (installedApp.TeamsAppDefinition.DisplayName == "New Employee Onboarding")
+                    {
+                        this.logger.LogInformation($"Installed App Id : {installedApp.Id}");
+                        return installedApp.Id;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"Error occurred while fetching installed app Id. Exception : {ex.Message}");
             }
 
             return string.Empty;
@@ -383,18 +390,24 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Helpers
         /// Remove the app from the user scope.
         /// </summary>
         /// <param name="token">Microsoft Graph Application access token.</param>
-        /// <param name="userAadIdList">Azure Active Directory Id List for users.</param>
+        /// <param name="userAadId">Azure Active Directory Id List for users.</param>
         /// <param name="installedAppId">Installed app Id which is installed for a user.</param>
         /// <returns>None.</returns>
-        public async Task RemoveAppFromUserScopeAsync(string token, List<string> userAadIdList, string installedAppId)
+        public async Task RemoveAppFromUserScopeAsync(string token, string userAadId, string installedAppId)
         {
             var graphClient = this.GetGraphServiceClient(token);
-            foreach (var userAadId in userAadIdList)
+
+            try
             {
                 this.logger.LogInformation($"Removing app for a user Id : {userAadId}");
                 await graphClient.Users[userAadId].Teamwork.InstalledApps[installedAppId]
-                .Request()
-                .DeleteAsync();
+                    .Request()
+                    .DeleteAsync();
+                this.logger.LogInformation($"App is removed successfully for a user Id : {userAadId}");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"Error occurred while removing app. Exception : {ex.Message}");
             }
         }
 

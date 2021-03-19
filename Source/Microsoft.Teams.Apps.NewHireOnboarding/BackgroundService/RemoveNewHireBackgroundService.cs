@@ -114,7 +114,7 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.BackgroundService
                 catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types
                 {
-                    this.logger.LogError(ex, $"Error while removing Employee : {ex}");
+                    this.logger.LogError(ex, $"Error while removing Employee. Exception : {ex.Message}");
                 }
                 finally
                 {
@@ -174,9 +174,11 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.BackgroundService
             // string teamsId = this.GetPatternMatchedValue(this.botOptions.Value.TeamsLink, @"groupId=([-\w]+?)&");
             if (employeeAadIdList.Any())
             {
-                // Todo: Need to handle the case if the app is installed for more than one tenant... For now the logic is for a single tenant...
-                string installedAppId = await this.membersService.GetInstalledAppIdAsync(graphApiAccessToken, employeeAadIdList.First());
-                await this.membersService.RemoveAppFromUserScopeAsync(graphApiAccessToken, employeeAadIdList, installedAppId);
+                foreach (var employeeAadId in employeeAadIdList)
+                {
+                    string installedAppId = await this.membersService.GetInstalledAppIdAsync(graphApiAccessToken, employeeAadId);
+                    await this.membersService.RemoveAppFromUserScopeAsync(graphApiAccessToken, employeeAadId, installedAppId);
+                }
             }
         }
 

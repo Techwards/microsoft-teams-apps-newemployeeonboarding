@@ -48,9 +48,9 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Helpers
         /// Remove the app from the user scope.
         /// </summary>
         /// <param name="token">Microsoft Graph Application access token.</param>
-        /// <param name="userAadIdList">Azure Active Directory Id List for users.</param>
+        /// <param name="userAadId">Azure Active Directory Id List for users.</param>
         /// <param name="installedAppId">Installed app Id which is installed for a user.</param>
         /// <returns>None.</returns>
-        Task RemoveAppFromUserScopeAsync(string token, List<string> userAadIdList, string installedAppId);
+        Task RemoveAppFromUserScopeAsync(string token, string userAadId, string installedAppId);
     }
 }
