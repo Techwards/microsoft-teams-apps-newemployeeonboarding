@@ -40,6 +40,11 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Models.Configuration
         public string TeamsAppId { get; set; }
 
         /// <summary>
+        /// Gets or sets Teams Link.
+        /// </summary>
+        public string TeamsLink { get; set; }
+
+        /// <summary>
         /// Gets or sets human resource team id.
         /// </summary>
         public string HumanResourceTeamId { get; set; }

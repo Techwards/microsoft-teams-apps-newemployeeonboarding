@@ -83,6 +83,13 @@
         "description": "Complete learning plan url from SharePoint."
       }
     },
+    "teamsLink": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "This is a Team Link in which the app gets installed. The Team Link would look like https://teams.microsoft.com/l/team/19%3aed274fc3c243se7d8a6f3eg38b711d29%40thread.tacv2/conversations?groupId=3c7d63a2-b102-4a54-8864-fc3a8b7a2f2c&tenantId=9b109f94-2b74-45e1-b99c-b2d9d698cf92"
+      }
+    },
     "newHireQuestionListName": {
       "type": "string",
       "minLength": 1,
@@ -344,6 +351,10 @@
             {
               "name": "App:HumanResourceTeamLink",
               "value": "[parameters('humanResourceTeamLink')]"
+            },
+            {
+              "name": "App:TeamsLink",
+              "value": "[parameters('teamsLink')]"
             },
             {
               "name": "Storage:ConnectionString",

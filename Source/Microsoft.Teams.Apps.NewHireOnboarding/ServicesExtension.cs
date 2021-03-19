@@ -46,6 +46,7 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding
                 options.TenantId = configuration.GetValue<string>("App:TenantId");
                 options.ManifestId = configuration.GetValue<string>("App:ManifestId");
                 options.TeamsAppId = configuration.GetValue<string>("App:TeamsAppId");
+                options.TeamsLink = configuration.GetValue<string>("App:TeamsLink");
                 options.MicrosoftAppId = configuration.GetValue<string>("MicrosoftAppId");
                 options.MicrosoftAppPassword = configuration.GetValue<string>("MicrosoftAppPassword");
                 options.HumanResourceTeamId = ParseTeamIdFromDeepLink(configuration.GetValue<string>("App:HumanResourceTeamLink"));
@@ -86,6 +87,11 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding
             services.Configure<PairUpBackgroundServiceSettings>(options =>
             {
                 options.DelayInPairUpNotificationInDays = configuration.GetValue<int>("PairUpBackgroundService:DelayInPairUpNotificationInDays");
+                options.NewHireRetentionPeriodInDays = configuration.GetValue<int>("PairUpBackgroundService:NewHireRetentionPeriodInDays");
+            });
+
+            services.Configure<RemoveNewHireBackgroundServiceSettings>(options =>
+            {
                 options.NewHireRetentionPeriodInDays = configuration.GetValue<int>("PairUpBackgroundService:NewHireRetentionPeriodInDays");
             });
         }
@@ -139,6 +145,7 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding
             services.AddHostedService<SurveyNotificationBackgroundService>();
             services.AddHostedService<PairUpNotificationBackgroundService>();
             services.AddHostedService<AppManagerBackgroundService>();
+            services.AddHostedService<RemoveNewHireBackgroundService>();
         }
 
         /// <summary>

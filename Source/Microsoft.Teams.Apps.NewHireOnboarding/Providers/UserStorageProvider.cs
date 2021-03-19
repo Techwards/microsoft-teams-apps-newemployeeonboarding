@@ -213,6 +213,23 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Providers
         }
 
         /// <summary>
+        /// Delete UserEntity records from Azure Table Storage.
+        /// </summary>
+        /// <param name="usersToBeRemoved">UserEntity records list that has to be deleted.</param>
+        /// <returns>None.</returns>
+        public async Task DeleteUserRecordsBatchAsync(List<UserEntity> usersToBeRemoved)
+        {
+            var batchOperation = new TableBatchOperation();
+
+            foreach (var aadObjectId in usersToBeRemoved)
+            {
+                batchOperation.Delete(aadObjectId);
+            }
+
+            await this.CloudTable.ExecuteBatchAsync(batchOperation);
+        }
+
+        /// <summary>
         /// Stores or update user details data in Azure Table Storage.
         /// </summary>
         /// <param name="entity">Holds user detail entity data.</param>

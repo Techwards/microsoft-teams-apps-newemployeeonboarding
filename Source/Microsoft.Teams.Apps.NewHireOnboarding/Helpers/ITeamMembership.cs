@@ -35,5 +35,22 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Helpers
         /// <param name="groupId">Unique id of Azure Active Directory security group.</param>
         /// <returns>Group members.</returns>
         Task<List<string>> GetGroupMemberIdsAsync(string token, string groupId);
+
+        /// <summary>
+        /// Get the installed app id in the team.
+        /// </summary>
+        /// <param name="token">Microsoft Graph application access token.</param>
+        /// <param name="userAadId">Azure Active Directory Id for a user.</param>
+        /// <returns>Installed app id.</returns>
+        Task<string> GetInstalledAppIdAsync(string token, string userAadId);
+
+        /// <summary>
+        /// Remove the app from the user scope.
+        /// </summary>
+        /// <param name="token">Microsoft Graph Application access token.</param>
+        /// <param name="userAadId">Azure Active Directory Id List for users.</param>
+        /// <param name="installedAppId">Installed app Id which is installed for a user.</param>
+        /// <returns>None.</returns>
+        Task RemoveAppFromUserScopeAsync(string token, string userAadId, string installedAppId);
     }
 }

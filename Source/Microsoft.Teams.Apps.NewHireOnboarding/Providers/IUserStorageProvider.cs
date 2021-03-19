@@ -61,5 +61,12 @@ namespace Microsoft.Teams.Apps.NewHireOnboarding.Providers
         /// <param name="entities">Entities to be inserted or merged in Azure table storage.</param>
         /// <returns>A task that represents the work queued to execute.</returns>
         Task BatchInsertOrMergeAsync(IEnumerable<UserEntity> entities);
+
+        /// <summary>
+        /// Delete UserEntity records from Azure Table Storage.
+        /// </summary>
+        /// <param name="usersToBeRemoved">UserEntity records list that has to be deleted.</param>
+        /// <returns>None.</returns>
+        Task DeleteUserRecordsBatchAsync(List<UserEntity> usersToBeRemoved);
     }
 }
